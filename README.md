@@ -83,7 +83,7 @@ Para que la aplicación funcione completamente, necesitas estos archivos en `bac
 Procesa un archivo CSV y devuelve predicciones.
 
 **Entrada:**
-- Archivo CSV con columnas: `montoCobrar`, `montoCobrado`, `montoExigible`, `diaCobro`, `horaCobro`
+- Archivo CSV con columnas: `montoExigible`, `montoCobrar`, `COSTO`, `RESPUESTA EN DIAS`
 
 **Salida:**
 ```json
@@ -94,6 +94,35 @@ Procesa un archivo CSV y devuelve predicciones.
     "mejor_emisora_clase": "Banco A"
   }
 ]
+```
+
+### POST `/predict-single`
+Realiza una predicción individual con datos JSON.
+
+**Entrada:**
+```json
+{
+  "montoExigible": 1500,
+  "montoCobrar": 1200,
+  "costo": 150,
+  "respuestaEnDias": 10
+}
+```
+
+**Salida:**
+```json
+{
+  "success": true,
+  "prediction": {
+    "pred_ahorro": 1250.75,
+    "pred_ganancia": 890.50,
+    "mejor_emisora_clase": "Banco A",
+    "probabilidades_emisora": {
+      "Banco A": 0.85,
+      "Banco B": 0.15
+    }
+  }
+}
 ```
 
 ## 🛠️ Tecnologías
@@ -148,3 +177,7 @@ Este proyecto fue desarrollado para el Datathon [Año].
 ---
 
 💡 **Tip**: Para desarrollo, mantén el backend en puerto 5000 y frontend en 5173 para evitar problemas de CORS.
+## Screenshots
+
+![Main view](docs/screenshot.png)
+
