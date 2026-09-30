@@ -1,4 +1,9 @@
-# Datathon – Predicción de Cobros
+# CrediFiel Challenge: predicción de cobros (Datathon 2025)
+
+> **ES:** Modelos de redes neuronales (regresión + clasificación) para optimizar la cobranza por domiciliación de Credifiel: estimar ahorro y ganancia por operación y recomendar la emisora con mejor resultado. API en Flask y frontend en React + Vite.
+> **EN:** Neural-network models (regression + classification) to optimize direct-debit collections for Credifiel, served through a Flask API with a React + Vite frontend.
+
+**Autor:** [Hermann Pauwells Rivera](https://hermannpr.github.io/) · proyecto en equipo, Datathon 2025
 
 Aplicación para predecir ahorros, ganancias y mejores emisoras a partir de datos de cobros financieros.
 
@@ -41,3 +46,22 @@ npm run dev
 ## Status
 
 Prototipo / proyecto de Datathon (2025). Verificación manual con datos de ejemplo; sin suite de pruebas automatizada.
+
+## Cómo fluye una predicción
+
+```mermaid
+flowchart LR
+  CSV[CSV de cobros<br/>montoCobrar, montoCobrado,<br/>montoExigible, diaCobro, horaCobro] --> FE[React + Vite<br/>UploadForm / ResultsTable]
+  FE -->|POST /predict| API[Flask API]
+  API --> S[scaler.pkl]
+  S --> R[Red de regresión<br/>ahorro y ganancia]
+  S --> C[Red de clasificación<br/>mejor emisora + probabilidades]
+  R --> OUT[JSON por operación<br/>+ resumen]
+  C --> OUT
+```
+
+Los modelos entrenados (`.h5`, `.pkl`) y el dataset real no se incluyen en el repositorio por confidencialidad; `backend/datos_ejemplo.csv` trae 10 filas sintéticas con el formato esperado. Sin modelos, la API responde que no están cargados.
+
+## Licencia
+
+Sin licencia declarada; código publicado como portafolio.
