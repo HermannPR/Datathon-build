@@ -1,67 +1,65 @@
-# CrediFiel Challenge: predicción de cobros (Datathon 2025)
+# Predicción de cobros (Datathon 2025)
 
-> **ES:** Modelos de redes neuronales (regresión + clasificación) para optimizar la cobranza por domiciliación de Credifiel: estimar ahorro y ganancia por operación y recomendar la emisora con mejor resultado. API en Flask y frontend en React + Vite.
-> **EN:** Neural-network models (regression + classification) to optimize direct-debit collections for Credifiel, served through a Flask API with a React + Vite frontend.
+Aplicación web que toma un archivo CSV de operaciones de cobro por domiciliación de Credifiel y devuelve predicciones por operación. Estima el ahorro y la ganancia, y recomienda la emisora con mejor resultado. Fue un proyecto en equipo para el Datathon 2025, pensado para ayudar a decidir dónde concentrar la cobranza.
 
-**Autor:** [Hermann Pauwells Rivera](https://hermannpr.github.io/) · proyecto en equipo, Datathon 2025
+**Autor:** [Hermann Pauwells Rivera](https://hermannpr.github.io/), trabajo en equipo.
 
-Aplicación para predecir ahorros, ganancias y mejores emisoras a partir de datos de cobros financieros.
+![Pantalla principal](docs/capturas/escritorio.jpg)
 
-## Overview
+## Características
 
-Proyecto de Data Science (Datathon) que toma un archivo CSV de operaciones financieras y devuelve predicciones de cobro para ayudar a decidir dónde concentrar esfuerzos. Combina un backend de predicción en Flask con un frontend React para subir, procesar y visualizar resultados.
+- Carga de un CSV con las columnas `montoCobrar`, `montoCobrado`, `montoExigible`, `diaCobro` y `horaCobro`.
+- Red neuronal de regresión para estimar ahorro y ganancia.
+- Red neuronal de clasificación para recomendar la mejor emisora, con probabilidades.
+- Resultados por operación en una tabla, con un resumen general.
+- API REST en Flask con el endpoint `POST /predict`.
 
-## Tech Stack
+## Tecnologías
 
-- Backend: Flask, Flask-CORS, pandas, TensorFlow, scikit-learn, joblib, numpy.
-- Frontend: React, TypeScript, Vite.
-- Datos: archivos CSV (ver `backend/datos_ejemplo.csv`).
+- Backend: Flask, Flask-CORS, pandas, TensorFlow, scikit-learn, joblib y NumPy.
+- Frontend: React 19, TypeScript y Vite.
 
-## Key Features
+## Cómo funciona
 
-- API REST en Flask para procesar predicciones.
-- Modelos de regresión y clasificación con TensorFlow / scikit-learn.
-- Carga y análisis de archivos CSV.
-- Frontend React con tablas interactivas de resultados.
+```mermaid
+flowchart LR
+  CSV[CSV de cobros] --> FE[React + Vite]
+  FE -->|POST /predict| API[API Flask]
+  API --> S[Escalador]
+  S --> R[Regresión: ahorro y ganancia]
+  S --> C[Clasificación: mejor emisora]
+  R --> OUT[JSON por operación y resumen]
+  C --> OUT
+```
 
-## Getting Started
+## Cómo correrlo
 
-Scripts de Windows incluidos: `setup.bat` (instala y prepara), `start_full_app.bat` (arranca backend + frontend), `run_server.bat` (solo backend).
-
-Manual:
+Backend:
 
 ```bash
-# Backend
 cd backend
-python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 python app.py
+```
 
-# Frontend (en otra terminal)
+En Windows se activa con `.venv\Scripts\activate`. El backend corre en el puerto 5000.
+
+Frontend, en otra terminal:
+
+```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-## Status
+También hay scripts para Windows: `setup.bat`, `start_full_app.bat` y `run_server.bat`.
 
-Prototipo / proyecto de Datathon (2025). Verificación manual con datos de ejemplo; sin suite de pruebas automatizada.
+## Datos y modelos
 
-## Cómo fluye una predicción
+Los modelos entrenados (`.h5` y `.pkl`) y el dataset real no se incluyen en el repositorio por confidencialidad. El archivo `backend/datos_ejemplo.csv` trae 10 filas sintéticas con el formato esperado. Sin los modelos, la API responde que no están cargados.
 
-```mermaid
-flowchart LR
-  CSV[CSV de cobros<br/>montoCobrar, montoCobrado,<br/>montoExigible, diaCobro, horaCobro] --> FE[React + Vite<br/>UploadForm / ResultsTable]
-  FE -->|POST /predict| API[Flask API]
-  API --> S[scaler.pkl]
-  S --> R[Red de regresión<br/>ahorro y ganancia]
-  S --> C[Red de clasificación<br/>mejor emisora + probabilidades]
-  R --> OUT[JSON por operación<br/>+ resumen]
-  C --> OUT
-```
+## Estado y licencia
 
-Los modelos entrenados (`.h5`, `.pkl`) y el dataset real no se incluyen en el repositorio por confidencialidad; `backend/datos_ejemplo.csv` trae 10 filas sintéticas con el formato esperado. Sin modelos, la API responde que no están cargados.
-
-## Licencia
-
-Sin licencia declarada; código publicado como portafolio.
+Prototipo hecho para el Datathon 2025, probado a mano con datos de ejemplo y sin pruebas automatizadas. No tiene licencia declarada y el código se publica como portafolio.
